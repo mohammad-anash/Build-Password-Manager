@@ -2,15 +2,16 @@ const WebsiteInput = document.getElementById("website");
 const UserNameInput = document.getElementById("UserName");
 const PasswordInput = document.getElementById("Password");
 const submitButton = document.querySelector(".submit");
+const copiedEl = document.querySelectorAll(".copied");
 
 // Select tBody
 const tbody = document.querySelector(".tbody");
 
 function getInputValues() {
   if (
-    WebsiteInput.value === "" ||
-    UserNameInput.value === "" ||
-    PasswordInput.value === ""
+    WebsiteInput.value.trim() === "" ||
+    UserNameInput.value.trim() === "" ||
+    PasswordInput.value.trim() === ""
   ) {
     alert("Please Fill Input");
   } else {
@@ -32,6 +33,10 @@ function getInputValues() {
     PasswordTd.innerText = PasswordInputValue;
     deleteTd.innerHTML = `<button class="Delete">Delete</button>`;
 
+    appendCopiedDiv(websiteTd);
+    appendCopiedDiv(UserNameTd);
+    appendCopiedDiv(PasswordTd);
+
     // do empty all input when click on submit button
     WebsiteInput.value = "";
     UserNameInput.value = "";
@@ -49,16 +54,31 @@ function getInputValues() {
   }
 }
 
-// add click Event in Submit button to get Input values
-submitButton.addEventListener("click", getInputValues);
-
 const deleteButtons = document.querySelectorAll(".Delete");
 
-// Add click event listeners to delete buttons
 deleteButtons.forEach((button) => {
   button.addEventListener("click", function () {
-    // Perform delete operation or any other action
     const rowToDelete = button.closest("tr");
     rowToDelete.remove();
+  });
+});
+
+function appendCopiedDiv(tdElement) {
+  const copiedDiv = document.createElement("div");
+  copiedDiv.classList.add("copied");
+  tdElement.appendChild(copiedDiv);
+
+  copiedDiv.addEventListener("click", function () {
+    const text = copiedDiv.parentElement.innerText;
+    navigator.clipboard.writeText(text);
+  });
+}
+
+submitButton.addEventListener("click", getInputValues);
+
+copiedEl.forEach((copyButton) => {
+  copyButton.addEventListener("click", function () {
+    const parentText = copyButton.parentElement.innerText;
+    navigator.clipboard.writeText(parentText);
   });
 });
